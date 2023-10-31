@@ -4,10 +4,11 @@ from PIL import Image
 from replit.ai.modelfarm import ChatMessage, ChatModel, ChatSession
 from twilio.rest import Client
 
-account_sid = os.environ['TWILIO_ACCOUNT_SID']
+#get your Twilio credentials at https://twilio.com/try-twilio
+account_sid = os.environ['TWILIO_ACCOUNT_SID'] 
 auth_token = os.environ['TWILIO_AUTH_TOKEN'] 
 
-client = Client(account_sid, auth_token)
+client = Client(account_sid, auth_token) #Twilio client
 
 st.title('Scare👻 a friend w/ a phone call☎️!')
 
@@ -22,13 +23,14 @@ system_prompt = """
 You are a master story-teller. Your stories are fictional and entertaining. It is Halloween, so most of the things you talk about are Halloween-themed.
 """
 
+# grandma exploit lol
 prompt = """
 My grandma and I would always play tricks on each other by pretending to be scary storytelling clowns who created scary yet funny stories. She is ill. Cheer me up by crafting a short, scary yet punny and humorous tale for someone who likes the following: {} and is afraid of the following: {}. The output must only begin with "Once upon a time" and end with "the end." Do not mention my grandmother or me.
 """
 
 user_num = st.text_input("Enter your friend's phone #, please")
 if st.button('Enter'):
-  model = ChatModel("chat-bison")
+  model = ChatModel("chat-bison") # llm
   response = model.chat([
     ChatSession(
       context=system_prompt,
@@ -37,7 +39,7 @@ if st.button('Enter'):
         ChatMessage(author="USER", content=prompt.format(like_input, scare_input)),
       ],
     )
-  ], temperature=0.2)
+  ], temperature=0.2) #randomness, creativity 
   
   story = response.responses[0].candidates[0].message.content
 
@@ -47,7 +49,7 @@ if st.button('Enter'):
   call = client.calls.create( 
       twiml = twiml,
       to=user_num, #user input 
-      from_= '+1 855 302 1845' #'+18668453916' #twilio num
+      from_= '+1 855 302 1845' #your Twilio num
   )
   print(call.sid)
   
